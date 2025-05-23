@@ -90,7 +90,7 @@ def pagerank(
         else:
             res_history.append(float(np.linalg.norm(residual)))
 
-    x, info = gmres(A_op, b, atol=tol, restart=restart,
+    x, info = gmres(A_op, b, rtol=tol, restart=restart,
                     maxiter=max_iter, M=M, callback=callback,
                     callback_type='pr_norm')
     if info != 0:
