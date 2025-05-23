@@ -1,0 +1,4 @@
+Algorithm,Time (s),Residual Norm,Iterations,Initial Residual,Final Residual,Convergence Rate,Convergence Type,Norm Type
+power,0.365,0.075184,54,8.327726e-01,9.145737e-07,910558.18x,Iterative,L1
+gmres_solver,111.972,0.075185,10,2.498521e+00,8.064896e-07,3098020.19x,Iterative,L2
+direct_lu,6.878,N/A,0,N/A,N/A,N/A,Direct,N/A
