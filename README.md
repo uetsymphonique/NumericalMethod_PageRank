@@ -1,9 +1,9 @@
 # PageRank Implementation
 
 This project provides various implementations of the PageRank algorithm, including:
-- Power Iteration (current)
-- Gauss-Seidel (planned)
-- GMRES (planned)
+- Power Iteration
+- Gauss-Seidel (with SOR acceleration)
+- GMRES (with preconditioners)
 - Direct LU (planned)
 
 ## Project Structure
@@ -20,8 +20,8 @@ NumericalMethod_PageRank/
 │     └─ algorithms/         # PageRank implementations
 │        ├─ __init__.py
 │        ├─ power.py         # Power iteration
-│        ├─ gauss_seidel.py  # (planned)
-│        ├─ gmres_solver.py  # (planned)
+│        ├─ gauss_seidel.py  # Gauss-Seidel with SOR
+│        ├─ gmres_solver.py  # GMRES with preconditioners
 │        └─ direct_lu.py     # (planned)
 ├─ tests/                    # Test suite
 ├─ README.md
@@ -43,8 +43,14 @@ pip install -e .
 ## Usage
 
 ```bash
-# Run with default settings
+# Run with default settings (Power Iteration)
 python -m pagerank.cli
+
+# Run Gauss-Seidel with optimal omega
+python -m pagerank.cli --algorithm gauss_seidel --auto-omega
+
+# Run GMRES with ILU preconditioner
+python -m pagerank.cli --algorithm gmres_solver --preconditioner ilu
 
 # Run with custom parameters
 python -m pagerank.cli --graph web-Google.txt --limit 1000 --tolerance 1e-7 --alpha 0.8
@@ -63,7 +69,18 @@ python -m pagerank.cli --log-level DEBUG
 - `--log-level`: Set the logging level (default: INFO)
 - `--tolerance`: Tolerance for convergence (default: 1e-6)
 - `--alpha`: Damping factor for PageRank (default: 0.85)
-- `--algorithm`: PageRank algorithm to use (default: power)
+- `--max-iter`: Maximum number of iterations (default: 100)
+- `--algorithm`: PageRank algorithm to use (choices: power, gauss_seidel, gmres_solver)
+
+### Algorithm-specific Arguments
+
+#### Gauss-Seidel
+- `--omega`: SOR relaxation factor (default: 1.0)
+- `--auto-omega`: Automatically find optimal omega
+
+#### GMRES
+- `--restart`: GMRES restart size (default: 30)
+- `--preconditioner`: Preconditioner type (choices: ilu, jacobi, none, default: ilu)
 
 ## Development
 
