@@ -154,6 +154,5 @@ def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100):
 
 ## References
 
-1. Langville, A. N., & Meyer, C. D. (2006). Google's PageRank and Beyond
-2. Page, L., et al. (1999). The PageRank Citation Ranking
-3. Berkhin, P. (2005). A Survey on PageRank Computing 
+1. [The PageRank Algorithm](https://acme.byu.edu/00000180-6956-dde7-ad8c-6dde900c0001/pagerank)
+2. [PageRank Algorithm - The Mathematics of Google Search](https://pi.math.cornell.edu/~mec/Winter2009/RalucaRemus/Lecture3/lecture3.html)

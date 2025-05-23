@@ -143,6 +143,4 @@ def pagerank(G, alpha=0.85, permc_spec="COLAMD", drop_tol=1e-10):
 
 ## References
 
-1. Davis, T. A. (2006). Direct Methods for Sparse Linear Systems
-2. Langville, A. N., & Meyer, C. D. (2006). Google's PageRank and Beyond
-3. Duff, I. S., et al. (2017). Direct Methods for Sparse Matrices 
+1. [Direct Method: LU Decomposition](https://engcourses-uofa.ca/books/numericalanalysis/linear-systems-of-equations/direct-methods/lu-decomposition/)

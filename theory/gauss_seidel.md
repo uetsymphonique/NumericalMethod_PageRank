@@ -142,6 +142,5 @@ def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega=1.0):
 
 ## References
 
-1. Saad, Y. (2003). Iterative Methods for Sparse Linear Systems
-2. Langville, A. N., & Meyer, C. D. (2006). Google's PageRank and Beyond
-3. Young, D. M. (1971). Iterative Solution of Large Linear Systems 
+1. [A Study on Comparison of Jacobi, GaussSeidel and Sor Methods for the Solution in System of Linear Equations](https://ijmttjournal.org/public/assets/volume-56/number-4/IJMTT-V56P531.pdf)
+2. [Iterative Methods: SOR Method](https://engcourses-uofa.ca/books/numericalanalysis/linear-systems-of-equations/iterative-methods/sor-method/)

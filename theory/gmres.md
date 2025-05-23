@@ -209,6 +209,5 @@ GMRES converges when:
 
 ## References
 
-1. Saad, Y., & Schultz, M. H. (1986). GMRES: A generalized minimal residual algorithm for solving nonsymmetric linear systems.
-2. Barrett, R., et al. (1994). Templates for the Solution of Linear Systems: Building Blocks for Iterative Methods.
-3. Langville, A. N., & Meyer, C. D. (2006). Google's PageRank and Beyond: The Science of Search Engine Rankings. 
+1. [GMRES](https://acme.byu.edu/00000179-aa18-d402-af7f-abf806ac0001/gmres2020-pdf)
+2. [Arnoldi Iteration and GMRES](https://www.math.iit.edu/~fass/477577_Chapter_14.pdf)
