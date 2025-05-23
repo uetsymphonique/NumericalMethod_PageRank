@@ -19,14 +19,14 @@ log = get_logger(__name__)
 
 
 def build_matrix(G, alpha: float = 0.85) -> csr_matrix:
-    """Return A = I - α·Pᵀ as CSR sparse matrix."""
+    """Return A = I - α·P as CSR sparse matrix."""
     n = G.number_of_nodes()
     idx = {u: i for i, u in enumerate(G.nodes())}
     
-    # Build Pᵀ (transpose of P)
+    # Build P (transpose matrix)
     rows, cols, data = [], [], []
     for u, v in G.edges():
-        j, i = idx[u], idx[v]          # Pᵀ: source column is destination node
+        j, i = idx[u], idx[v]          # P: source column is destination node
         rows.append(i)
         cols.append(j)
         data.append(1.0 / G.out_degree(u))
@@ -59,7 +59,7 @@ def pagerank(
     
     # 2. LU decomposition
     log.info("Factorising sparse LU ...")
-    lu = splu(A.tocsc(), permc_spec=permc_spec, drop_tol=drop_tol,
+    lu = splu(A.tocsc(), permc_spec=permc_spec,
               options={"ILU_MILU": "SMILU_2"})  # full pivoting
     
     # 3. Solve

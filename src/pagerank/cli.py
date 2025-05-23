@@ -138,12 +138,13 @@ def main():
     metrics = pd.DataFrame(columns=[
         'Algorithm', 
         'Time (s)', 
-        'L1 Difference', 
+        'Residual Norm',
         'Iterations',
         'Initial Residual',
         'Final Residual',
         'Convergence Rate',
-        'Convergence Type'
+        'Convergence Type',
+        'Norm Type'
     ])
     
     # DataFrame to store top nodes
@@ -206,12 +207,13 @@ def main():
         metrics.loc[len(metrics)] = {
             'Algorithm': algo,
             'Time (s)': f"{elapsed:.3f}",
-            'L1 Difference': f"{l1_diff:.6f}",
+            'Residual Norm': "N/A" if algo == "direct_lu" else f"{l1_diff:.6f}",
             'Iterations': len(residuals),
             'Initial Residual': f"{initial_residual:.6e}" if not np.isnan(initial_residual) else "N/A",
             'Final Residual': f"{final_residual:.6e}" if not np.isnan(final_residual) else "N/A",
             'Convergence Rate': f"{convergence_rate:.2f}x" if not np.isnan(convergence_rate) else "N/A",
-            'Convergence Type': convergence_type
+            'Convergence Type': convergence_type,
+            'Norm Type': 'L1' if algo in ['power', 'gauss_seidel'] else 'L2' if algo == 'gmres_solver' else 'N/A'
         }
 
         # Store top nodes
@@ -229,7 +231,7 @@ def main():
         logger.info("Results:")
         print(f"Custom PageRank time: {elapsed:.3f}s")
         print(f"NetworkX time:        {nx_elapsed:.3f}s")
-        print(f"L1 difference:        {l1_diff:.6f}")
+        print(f"Residual Norm:        {l1_diff:.6f}")
         print(f"Iterations (custom):  {len(residuals)}")
 
         # Convergence information

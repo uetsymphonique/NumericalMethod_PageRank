@@ -1,10 +1,10 @@
 # PageRank Implementation
 
 This project provides various implementations of the PageRank algorithm, including:
-- Power Iteration
-- Gauss-Seidel (with SOR acceleration)
-- GMRES (with preconditioners)
-- Direct LU (with sparse matrix support)
+- [Power Iteration](theory/power_iteration.md)
+- [Gauss-Seidel](theory/gauss_seidel.md) (with SOR acceleration)
+- [GMRES](theory/gmres.md) (with preconditioners)
+- [Direct LU](theory/direct_lu.md) (with sparse matrix support)
 
 ## Project Structure
 
@@ -23,6 +23,11 @@ NumericalMethod_PageRank/
 │        ├─ gauss_seidel.py  # Gauss-Seidel with SOR
 │        ├─ gmres_solver.py  # GMRES with preconditioners
 │        └─ direct_lu.py     # Direct LU decomposition
+├─ theory/                   # Theory documentation
+│  ├─ power_iteration.md     # Power iteration explanation
+│  ├─ gauss_seidel.md       # Gauss-Seidel explanation
+│  ├─ gmres.md              # GMRES explanation
+│  └─ direct_lu.md          # Direct LU explanation
 ├─ tests/                    # Test suite
 ├─ README.md
 ├─ pyproject.toml           # Project configuration
