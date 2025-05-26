@@ -8,3 +8,4 @@ __pycache__
 myenv/
 pagerank.egg-info/
 plots_*
+*.txt

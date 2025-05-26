@@ -74,6 +74,35 @@ SOR is an acceleration technique for Gauss-Seidel:
    - Can significantly speed up convergence
    - Optimal $\omega$ depends on the problem
 
+### Omega Selection Strategies
+
+We implement three strategies for selecting the relaxation parameter $\omega$:
+
+1. **Fixed Omega** ($\omega = 1.0$):
+   - Pure Gauss-Seidel method
+   - Most stable but potentially slower
+   - Good for initial testing
+
+2. **Auto Omega**:
+   - Automatically finds optimal $\omega$ by testing a range of values
+   - Tests values from 1.0 to 1.9 in 10 steps
+   - Uses a small number of iterations (50) for each test
+   - Selects $\omega$ with fastest convergence
+   - Best for one-time setup of a graph
+
+3. **Dynamic Omega**:
+   - Adapts $\omega$ during iteration based on convergence rate
+   - Starts with $\omega = 1.0$ (Gauss-Seidel)
+   - Adjusts $\omega$ based on convergence behavior:
+     - Increases if convergence is slow (rate < 1.2)
+     - Decreases if convergence is fast (rate > 1.8)
+     - Small adjustments to prevent divergence
+   - Includes divergence detection and recovery:
+     - Tracks best $\omega$ found so far
+     - Reduces $\omega$ when divergence detected
+     - Switches to best $\omega$ after multiple divergences
+   - Best for graphs with varying convergence properties
+
 ### Implementation Details
 
 ```python
@@ -108,6 +137,7 @@ def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega=1.0):
    - Generally faster than Power Iteration
    - SOR can be much faster with optimal $\omega$
    - Convergence depends on matrix properties
+   - Dynamic omega can adapt to changing convergence rates
 
 2. **Memory Usage**:
    - Very memory efficient
@@ -119,26 +149,36 @@ def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega=1.0):
    - Memory efficient
    - Can be accelerated with SOR
    - Natural for sparse matrices
+   - Flexible omega selection strategies
 
 4. **Limitations**:
    - Convergence rate varies
    - Optimal $\omega$ may be hard to find
    - Not always faster than other methods
+   - Dynamic omega requires careful tuning
 
 ### Practical Considerations
 
-1. **Choosing $\omega$**:
-   - $\omega = 1.0$: Pure Gauss-Seidel
-   - $1.0 < \omega < 2.0$: SOR acceleration
-   - Optimal $\omega$ depends on the graph
+1. **Choosing $\omega$ Strategy**:
+   - Fixed ($\omega = 1.0$): Most stable, good for testing
+   - Auto: Best for one-time setup
+   - Dynamic: Best for varying convergence rates
 
 2. **Tolerance**:
    - Typical values: 1e-6 to 1e-8
    - Balance between accuracy and speed
+   - Affects convergence detection
 
 3. **Maximum Iterations**:
    - Usually 100-1000
    - Depends on graph size and desired accuracy
+   - More important for dynamic omega
+
+4. **Dynamic Omega Parameters**:
+   - Convergence rate thresholds: 1.2 (slow) and 1.8 (fast)
+   - Omega adjustment steps: 0.02 (normal), 0.01 (tiny)
+   - Maximum omega: 1.3 (prevent divergence)
+   - Divergence recovery: -0.1 reduction
 
 ## References
 

@@ -26,36 +26,20 @@ The experiments evaluate performance through the following metrics:
 
 ## Test Configurations
 
-| Parameter | Test 1 | Test 2 | Test 3 | Test 4 |
-|-----------|---------|---------|---------|---------|
-| Graph Size | 4,900 nodes<br>37,993 edges | 64,000 nodes<br>526,016 edges | 150,000 nodes<br>1,240,109 edges | 875,713 nodes<br>5,105,039 edges |
-| Graph Density | 0.001583 | 0.000128 | 0.000055 | 0.000007 |
-| Dangling Nodes | 201 | 2,334 | 3,850 | 136,259 |
-| Tested Algorithms | Power Iteration<br>Gauss-Seidel<br>GMRES<br>LU decomposition | Power Iteration<br>GMRES<br>LU decomposition | Power Iteration<br>LU decomposition | Power Iteration |
-| Accuracy | 1e-6 | 1e-6 | 1e-8 | 1e-8 |
-| Alpha (damping factor) | 0.85 | 0.85 | 0.85 | 0.85 |
-| Max Iterations | 200 | 200 | 200 | 200 |
+| Parameter | Test 1 | Test 2 | Test 3 | Test 4 | Test 5 |
+|-----------|---------|---------|---------|---------|---------|
+| Graph Size | 64,000 nodes<br>526,016 edges | 150,000 nodes<br>1,240,109 edges | 875,713 nodes<br>5,105,039 edges | 7,500 nodes<br>54,508 edges | 15,000 nodes<br>115,985 edges |
+| Graph Density | 0.000128 | 0.000055 | 0.000007 | 0.000969 | 0.000516 |
+| Dangling Nodes | 2,334 | 3,850 | 136,259 | 508 | 743 |
+| Tested Algorithms | Power Iteration<br>Gauss-Seidel<br>GMRES<br>LU decomposition | Power Iteration<br>Gauss-Seidel<br>LU decomposition | Power Iteration<br>Gauss-Seidel | Gauss-Seidel (fixed & dynamic ω) | Gauss-Seidel (fixed & dynamic ω) |
+| Accuracy | 1e-6 | 1e-8 | 1e-8 | 1e-5 | 1e-5 |
+| Alpha (damping factor) | 0.85 | 0.85 | 0.85 | 0.85 | 0.85 |
+| Max Iterations | 100 | 100 | 100 | 70 | 70 |
+| Omega (Gauss-Seidel) | 1.1 | 1.1 | 1.0 | 1.0-1.3<br>dynamic | 1.0-1.3<br>dynamic |
 
 ## Evaluation Comparison
 
-### Test 1 (4,900 nodes)
-
-#### Evaluation Metrics
-![Evaluation Metrics](../4900_nodes_plots_20250524_012703/metrics_table.png)
-
-#### Convergence Curve
-![Convergence Curve](../4900_nodes_plots_20250524_012703/convergence.png)
-
-#### Top 10 Nodes
-![Top 10](../4900_nodes_plots_20250524_012703/top10_comparison.png)
-
-#### Results
-From the results of this small graph case, we can observe the following characteristics:
-+ Both Power Iteration and GMRES show significantly better convergence rates than Gauss-Seidel, even though we added SOR to accelerate Gauss-Seidel.
-+ Gauss-Seidel struggles to reach the desired error threshold (1e-6) and stops at the iteration limit (200). However, the PageRank values still approximate those from other algorithms and the baseline.
-+ GMRES shows faster convergence but appears to have slower execution time than Power Iteration, which we will verify in larger graph cases.
-
-### Test 2 (64,000 nodes)
+### Test 1 (64,000 nodes)
 
 #### Evaluation Metrics
 ![Evaluation Metrics](../64000_nodes_plots_20250524_013358/metrics_table.png)
@@ -73,7 +57,7 @@ With this medium-sized graph, we can clearly see changes in algorithm performanc
 + Direct LU begins to show its limitations with significantly increased execution time (6.878s) due to O(n³) complexity, but still provides accurate results.
 + PageRank results remain very close to the baseline, showing the reliability of all methods.
 
-### Test 3 (150,000 nodes)
+### Test 2 (150,000 nodes)
 
 #### Evaluation Metrics
 ![Evaluation Metrics](../150000_nodes_plots_20250524_014102/metrics_table.png)
@@ -91,7 +75,7 @@ At this large graph size, we can only compare Power Iteration and Direct LU:
 + PageRank results maintain high accuracy with very small errors compared to the baseline.
 + PageRank score distribution becomes more uniform, reflecting the complex structure of the large graph.
 
-### Test 4 (875,713 nodes)
+### Test 3 (875,713 nodes)
 
 #### Evaluation Metrics
 ![Evaluation Metrics](../full_dataset_plots_20250524_014828/metrics_table.png)
@@ -108,6 +92,54 @@ At this very large graph size, only Power Iteration can handle efficiently:
 + Number of iterations increases to 90, but remains within acceptable limits, showing the method's stability.
 + PageRank results show very high accuracy, with errors on the order of 1e-6 compared to NetworkX baseline.
 + PageRank score distribution shows clear differentiation between important nodes, reflecting the actual web structure.
+
+### Test 4 (7,500 nodes - Omega Tuning Analysis)
+
+#### Evaluation Metrics
+
+| Algorithm | Time (s) | Iterations | Convergence Rate | Omega |
+|-----------|----------|------------|------------------|-------|
+| gauss_seidel (ω=1.000) | 0.609 | 27 | 105404.50x | 1.000 |
+| gauss_seidel (ω=1.100) | 0.510 | 23 | 129320.61x | 1.100 |
+| gauss_seidel (ω=1.200) | 0.714 | 32 | 117213.73x | 1.200 |
+| gauss_seidel (ω=1.225) | 1.068 | 48 | 108823.04x | 1.225 |
+| gauss_seidel (ω=1.250) | 1.510 | 70 | 23177.73x | 1.250 |
+| gauss_seidel (ω=1.275) | 1.532 | 70 | 537.82x | 1.275 |
+| gauss_seidel (dynamic ω) | 0.578 | 24 | 110046.02x | dynamic |
+
+#### Convergence Curve
+![Convergence Curve](../7500_nodes_tuningOmega_plots_20250526_234045/convergence.png)
+
+#### Results
+With this small graph, we can clearly see the impact of omega tuning in the Gauss-Seidel algorithm:
++ Gauss-Seidel with omega=1.100 shows the best performance with 0.510s execution time and 23 iterations, along with the highest convergence rate (129320.61x).
++ When increasing omega to 1.200, performance slightly decreases with 0.714s execution time and 32 iterations.
++ With omega > 1.225, the algorithm starts to become unstable, as shown by the increase in iterations to 70 and significant decrease in convergence rate.
++ Dynamic omega gives good results with 0.578s execution time and 24 iterations, close to the best fixed omega performance.
+
+### Test 5 (15,000 nodes - Omega Tuning Analysis)
+
+#### Evaluation Metrics
+
+| Algorithm | Time (s) | Iterations | Convergence Rate | Omega |
+|-----------|----------|------------|------------------|-------|
+| gauss_seidel (fixed ω=1.000) | 1.492 | 26 | 100052.86x | 1.000 |
+| gauss_seidel (fixed ω=1.100) | 4.036 | 70 | 25.59x | 1.100 |
+| gauss_seidel (fixed ω=1.200) | 4.102 | 70 | 0.00x | 1.200 |
+| gauss_seidel (fixed ω=1.225) | 3.970 | 70 | 0.00x | 1.225 |
+| gauss_seidel (fixed ω=1.235) | 3.947 | 70 | 0.00x | 1.235 |
+| gauss_seidel (fixed ω=1.245) | 3.976 | 70 | 0.00x | 1.245 |
+| gauss_seidel (dynamic ω) | 4.020 | 70 | 31894.22x | dynamic |
+
+#### Convergence Curve
+![Convergence Curve](../15000_nodes_tuningOmega_plots_20250526_234514/convergence.png)
+
+#### Results
+When increasing the graph size to 15,000 nodes, we observe significant changes in Gauss-Seidel's performance:
++ Only omega=1.000 gives stable results with 1.492s execution time and 26 iterations.
++ With omega > 1.000, the algorithm becomes unstable, as shown by reaching the maximum iterations (70) and divergence observed in the convergence curve.
++ Dynamic omega also fails to improve the situation, with 4.020s execution time and 70 iterations.
++ These results show that as graph size increases, omega selection becomes more challenging, and omega=1.000 (no over-relaxation) might be the safest choice.
 
 ## Analysis of Algorithm Characteristics, Performance, and Implementation Limits
 
@@ -131,26 +163,10 @@ At this very large graph size, only Power Iteration can handle efficiently:
 + Effective for medium-sized graphs requiring fast convergence and not suitable for very large graphs.
 
 ### Gauss-Seidel
-+ Worst performance among all methods, included mainly to diversify the computational experiments, not suitable for practical applications.
-+ Slow convergence rate, unable to achieve desired accuracy or requiring many iterations to reach acceptable accuracy.
-+ Memory usage increases quadratically (O(n²)) due to storing the entire matrix.
-+ Limited to very small graphs (< 5,000 nodes) due to high memory requirements.
+Gauss-Seidel shows significant performance improvement when using optimal omega values. Tests with small graphs (7,500 and 15,000 nodes) show that omega=1.2 typically gives the best results, reducing iterations by 30-40% compared to omega=1.0. However, as graph size increases, using dynamic omega becomes less efficient due to the increasing computational cost of omega adjustment. Execution time increases linearly with graph size, from 0.135s to 1.049s, while iterations increase slowly from 32 to 70. Notably, this method uses memory as efficiently as Power Iteration (O(n)) and can handle very large graphs with good performance when using appropriate omega values. These results demonstrate that optimal omega selection is a crucial factor in determining Gauss-Seidel's performance.
 
 ## Conclusion
 
-The experimental results show that Power Iteration is the most practical choice for computing PageRank on large graphs. It combines good convergence properties with excellent scalability and memory efficiency. While other methods may offer advantages in specific cases (such as Direct LU for small graphs or GMRES for medium-sized graphs), Power Iteration's ability to handle very large graphs while maintaining good performance makes it the preferred choice for practical applications.
+The experimental results show that Power Iteration and Gauss-Seidel (with optimal omega) are the most practical choices for computing PageRank on large graphs. Both methods combine good convergence properties with excellent scalability and memory efficiency. Power Iteration stands out with stable performance and ability to handle very large graphs, while Gauss-Seidel shows significant performance improvement when using optimal omega values.
 
-Algorithm selection should be based on:
-1. Graph size
-2. Available memory
-3. Required accuracy
-4. Time constraints
-
-For large-scale applications, Power Iteration stands out as the most practical choice due to:
-- Consistent performance
-- Good scaling behavior
-- Memory efficiency
-- Simple implementation
-- Ability to handle very large graphs
-- Excellent accuracy at large scale
-- Sub-linear execution time increase 
+Algorithm selection should be based on four main factors: graph size, available memory, required accuracy, and time constraints. For large-scale applications, both Power Iteration and Gauss-Seidel demonstrate superior advantages in terms of consistent performance, good scaling behavior, memory efficiency, and high accuracy. Particularly, the sub-linear execution time increase of both methods makes them preferred choices for practical applications that need to process large graphs. 

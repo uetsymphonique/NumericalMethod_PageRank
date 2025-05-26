@@ -1,0 +1,3 @@
+Algorithm,Time (s),Residual Norm,Iterations,Initial Residual,Final Residual,Convergence Rate,Convergence Type,Norm Type,Omega
+gauss_seidel (fixed ω=1.000),131.671,0.015045,53,1.055723e+00,8.383324e-09,125931295.95x,Iterative,L1,1.000
+power,5.095,0.015045,90,8.767778e-01,8.870329e-09,98843889.50x,Iterative,L1,N/A

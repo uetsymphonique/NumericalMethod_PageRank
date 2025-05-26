@@ -1,2 +1,0 @@
-Algorithm,Time (s),Residual Norm,Iterations,Initial Residual,Final Residual,Convergence Rate,Convergence Type,Norm Type
-power,5.536,0.015045,90,8.767778e-01,8.870329e-09,98843889.50x,Iterative,L1
