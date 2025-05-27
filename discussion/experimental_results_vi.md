@@ -77,7 +77,7 @@ Các thực nghiệm được thực hiện sẽ đánh giá hiệu suất thôn
 | direct_lu | 7.124 | 0 | N/A | N/A |
 
 #### Convergence Curve
-![Convergence Curve](../64000_nodes_plots_20250527_000118/convergence.png)
+![Convergence Curve](../data-results/64000_nodes_plots_20250527_000118/convergence.png)
 
 #### Results
 Với đồ thị cỡ trung bình này, chúng ta có thể thấy rõ sự khác biệt trong hiệu suất của các thuật toán:
@@ -98,7 +98,7 @@ Với đồ thị cỡ trung bình này, chúng ta có thể thấy rõ sự kh�
 | direct_lu | 175.727 | 0 | N/A | N/A |
 
 #### Top 10 Nodes
-![Top 10](../150000_nodes_plots_20250527_000651/top10_comparison.png)
+![Top 10](../data-results/150000_nodes_plots_20250527_000651/top10_comparison.png)
 
 #### Results
 Ở kích thước đồ thị lớn này, chúng ta chỉ còn có thể so sánh Power Iteration, Gauss-Seidel và Direct LU:
