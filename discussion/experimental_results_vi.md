@@ -22,7 +22,7 @@ Các bài thử nghiệm sẽ thực hiện lấy toàn bộ đồ thị hoặc 
 Chương trình thử nghiệm sử dụng ngôn ngữ Python, trên máy tính có cấu hình Intel Core i7-12700T, 16GB RAM (8GB RAM free cho việc chạy các thử nghiệm).
 
 ## Thiết lập hệ số
-Trong thử nghiệm này, chúng ta sẽ ưu tiên lấy đúng với hệ số damping (alpha) mà các nghiên cứu cũng như khảo sát chính thức của Google là `0.85`. Các ngưỡng sai số mục tiêu đặt ra sẽ là `1e-6` và `1e-8` trên các trường hợp thử nghiệm khác nhau.
+Trong thử nghiệm này, chúng ta sẽ ưu tiên lấy đúng với hệ số damping (alpha) mà các nghiên cứu cũng như khảo sát chính thức của Google là `0.85`. Các ngưỡng sai số mục tiêu đặt ra sẽ trải từ `1e-5` đến `1e-8` trên các trường hợp thử nghiệm khác nhau.
 
 # Evaluation Metrics
 Các thực nghiệm được thực hiện sẽ đánh giá hiệu suất thông qua các thông số:
