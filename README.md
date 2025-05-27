@@ -54,8 +54,11 @@ python -m pagerank.cli
 # Run all algorithms for comparison
 python -m pagerank.cli --algorithm all
 
-# Run Gauss-Seidel with optimal omega
-python -m pagerank.cli --algorithm gauss_seidel --auto-omega
+# Run Gauss-Seidel with different omega strategies
+python -m pagerank.cli --algorithm gauss_seidel --omega-strategy fixed --omega 1.1
+python -m pagerank.cli --algorithm gauss_seidel --omega-strategy auto
+python -m pagerank.cli --algorithm gauss_seidel --omega-strategy dynamic
+python -m pagerank.cli --algorithm gauss_seidel --omega-strategy all --omega 1.0,1.1,1.2
 
 # Run GMRES with ILU preconditioner
 python -m pagerank.cli --algorithm gmres_solver --preconditioner ilu
@@ -86,8 +89,12 @@ python -m pagerank.cli --log-level DEBUG
 ### Algorithm-specific Arguments
 
 #### Gauss-Seidel
-- `--omega`: SOR relaxation factor (default: 1.0)
-- `--auto-omega`: Automatically find optimal omega
+- `--omega`: SOR relaxation factor(s). Can be a single value or comma-separated list (e.g. '1.0,1.1,1.2')
+- `--omega-strategy`: Strategy for omega selection:
+  - `fixed`: Use provided omega value(s)
+  - `auto`: Automatically find optimal omega
+  - `dynamic`: Adjust omega during iteration
+  - `all`: Run both fixed and dynamic strategies
 
 #### GMRES
 - `--restart`: GMRES restart size (default: 30)
@@ -113,8 +120,8 @@ The program generates several output files in a timestamped directory (`plots_YY
 
 3. **Metrics Table** (`metrics_table.png` and `metrics.csv`):
    - Detailed comparison of algorithm performance
-   - Includes execution time, L1 difference, iterations
-   - Shows convergence metrics (initial/final residuals)
+   - Includes execution time, iterations, convergence rate
+   - Shows omega values for Gauss-Seidel variants
 
 4. **Top Nodes Data** (`top_nodes.csv`):
    - Detailed data for top 10 nodes from each algorithm
@@ -137,7 +144,3 @@ isort .
 # Type checking
 mypy .
 ```
-
-## License
-
-MIT License 

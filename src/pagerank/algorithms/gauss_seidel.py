@@ -130,7 +130,7 @@ def create_dynamic_omega() -> Callable[[int, List[float]], float]:
         else:
             # Normal adjustment based on convergence rate
             if rate < 1.2:  # Very slow convergence
-                current_omega[0] = min(1.3, current_omega[0] + 0.02)  # Very small increase
+                current_omega[0] = min(1.3, current_omega[0] + 0.01)  # Very small increase
                 if current_omega[0] != old_omega:
                     logger.info(f"Iteration {iteration}: Very slow convergence (rate = {rate:.3f}), "
                               f"increasing omega from {old_omega:.3f} to {current_omega[0]:.3f}")
@@ -140,7 +140,7 @@ def create_dynamic_omega() -> Callable[[int, List[float]], float]:
                     logger.info(f"Iteration {iteration}: Fast convergence (rate = {rate:.3f}), "
                               f"decreasing omega from {old_omega:.3f} to {current_omega[0]:.3f}")
             elif rate < last_rate[0]:  # Convergence is slowing down
-                current_omega[0] = min(1.3, current_omega[0] + 0.01)  # Tiny increase
+                current_omega[0] = min(1.3, current_omega[0] + 0.005)  # Tiny increase
                 if current_omega[0] != old_omega:
                     logger.info(f"Iteration {iteration}: Convergence slowing (rate = {rate:.3f} < {last_rate[0]:.3f}), "
                               f"increasing omega from {old_omega:.3f} to {current_omega[0]:.3f}")

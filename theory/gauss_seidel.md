@@ -78,37 +78,64 @@ SOR is an acceleration technique for Gauss-Seidel:
 
 We implement three strategies for selecting the relaxation parameter $\omega$:
 
-1. **Fixed Omega** ($\omega = 1.0$):
-   - Pure Gauss-Seidel method
-   - Most stable but potentially slower
-   - Good for initial testing
+1. **Fixed Omega**:
+   - Uses a constant value for $\omega$ throughout iterations
+   - Default value is 1.0 (pure Gauss-Seidel)
+   - Can be set to other values (e.g., 1.1, 1.2) for over-relaxation
+   - Most stable but may be slower than optimal
+   - Good for initial testing and well-behaved graphs
 
 2. **Auto Omega**:
    - Automatically finds optimal $\omega$ by testing a range of values
-   - Tests values from 1.0 to 1.9 in 10 steps
-   - Uses a small number of iterations (50) for each test
-   - Selects $\omega$ with fastest convergence
+   - Tests values from 1.0 to 1.3 in small steps (0.01-0.05)
+   - Uses a small number of iterations (20-30) for each test
+   - Selects $\omega$ with fastest convergence rate
    - Best for one-time setup of a graph
+   - Parameters:
+     - `omega_range`: Range of values to test (e.g., 1.0-1.3)
+     - `omega_step`: Step size between values (e.g., 0.01)
+     - `test_iterations`: Number of iterations for each test
+     - `convergence_threshold`: Threshold for convergence test
 
 3. **Dynamic Omega**:
-   - Adapts $\omega$ during iteration based on convergence rate
-   - Starts with $\omega = 1.0$ (Gauss-Seidel)
-   - Adjusts $\omega$ based on convergence behavior:
-     - Increases if convergence is slow (rate < 1.2)
-     - Decreases if convergence is fast (rate > 1.8)
-     - Small adjustments to prevent divergence
-   - Includes divergence detection and recovery:
+   - Adapts $\omega$ during iteration based on convergence behavior
+   - Starts with $\omega = 1.0$ (pure Gauss-Seidel)
+   - Adjusts $\omega$ based on convergence rate:
+     - If convergence is slow (rate < 1.2): increase $\omega$ slightly
+     - If convergence is fast (rate > 1.8): decrease $\omega$ slightly
+     - If divergence detected: reduce $\omega$ significantly
+   - Includes safety mechanisms:
      - Tracks best $\omega$ found so far
      - Reduces $\omega$ when divergence detected
      - Switches to best $\omega$ after multiple divergences
-   - Best for graphs with varying convergence properties
+     - Enforces upper and lower bounds (e.g., 1.0-1.3)
+   - Parameters:
+     - `min_omega`: Minimum allowed value (e.g., 1.0)
+     - `max_omega`: Maximum allowed value (e.g., 1.3)
+     - `omega_step`: Step size for adjustments (e.g., 0.01)
+     - `divergence_threshold`: Threshold for detecting divergence
+     - `max_divergence_count`: Maximum allowed divergences before switching to best omega
 
 ### Implementation Details
 
 ```python
-def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega=1.0):
+def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega_strategy="fixed", omega=1.0):
     # Initialize
     p = v.copy()  # uniform distribution
+    
+    # Setup omega strategy
+    if omega_strategy == "fixed":
+        omega_func = lambda: omega
+    elif omega_strategy == "auto":
+        omega_func = find_optimal_omega(G, alpha, tol)
+    else:  # dynamic
+        omega_func = DynamicOmega(
+            min_omega=1.0,
+            max_omega=1.3,
+            step=0.01,
+            divergence_threshold=1e-3,
+            max_divergence_count=3
+        )
     
     for _ in range(max_iter):
         diff = 0.0
@@ -120,8 +147,11 @@ def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega=1.0):
             rank_new += alpha * d_mass * v[i]
             rank_new += alpha * sum(p[j]/outdeg[j] for j in G.predecessors(i))
             
+            # Get current omega value
+            current_omega = omega_func()
+            
             # Apply SOR
-            rank_new = (1 - omega) * p[i] + omega * rank_new
+            rank_new = (1 - current_omega) * p[i] + current_omega * rank_new
             
             # Update and track difference
             diff += abs(rank_new - p[i])

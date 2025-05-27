@@ -1,0 +1,2 @@
+Algorithm,Time (s),Residual Norm,Iterations,Initial Residual,Final Residual,Convergence Rate,Convergence Type,Norm Type,Omega
+power,19.032,0.011520,20,4.250108e-01,5.812209e-09,73123803.50x,Iterative,L1,N/A
