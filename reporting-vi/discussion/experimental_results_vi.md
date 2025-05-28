@@ -274,24 +274,32 @@ GMRES nổi bật với tốc độ hội tụ nhanh nhất, chỉ cần 10 lầ
 | web-BerkStan<br>685,230 nút<br>7,600,595 cạnh | Lớn | 0.000016 | 91.971s, 44 lần | 1.020, 91.334s, 43 lần | 1.020, 91.334s, 43 lần | 120.813s, 58 lần |
 | web-Google<br>875,713 nút<br>5,105,039 cạnh | Rất lớn | 0.000007 | 118.008s, 46 lần | 1.050, 108.600s, 42 lần | 1.050, 108.600s, 42 lần | 111.228s, 43 lần |
 
-Gauss-Seidel cho thấy hiệu suất đa dạng và phức tạp khi thử nghiệm trên nhiều loại đồ thị khác nhau. Với đồ thị nhỏ (7,500-15,000 nút), omega tối ưu nằm trong khoảng 1.0-1.2, giúp giảm số lần lặp xuống 30-40% so với omega=1.0. Tuy nhiên, khi chuyển sang đồ thị trung bình (325,729 nút - web-NotreDame), omega tối ưu tăng lên 1.075, giúp giảm số lần lặp từ 61 xuống 57 lần. Điều thú vị là với đồ thị lớn (685,230 nút - web-BerkStan), omega tối ưu lại giảm xuống 1.020, cho thời gian thực thi tốt nhất (91.334s) và số lần lặp ít nhất (43 lần). Với đồ thị rất lớn (875,713 nút - web-Google), omega tối ưu nằm trong khoảng 1.0-1.070, với hiệu suất ổn định cho tất cả các giá trị.
+Gauss-Seidel cho thấy hiệu suất đa dạng và phức tạp khi thử nghiệm trên nhiều loại đồ thị khác nhau. Với đồ thị nhỏ (7,500-15,000 nút), omega tối ưu nằm trong khoảng 1.0-1.2, giúp giảm số lần lặp xuống 30-40% so với omega=1.0. Tuy nhiên, khi chuyển sang đồ thị trung bình và lớn, việc lựa chọn omega tối ưu trở nên phức tạp hơn và phụ thuộc vào đặc điểm của đồ thị.
 
-Tính ổn định của thuật toán cũng thay đổi đáng kể giữa các đồ thị. Đồ thị web-NotreDame và web-Google cho thấy tính ổn định cao với omega, với thời gian thực thi thay đổi không đáng kể (52-57s và 1.0-1.3s). Ngược lại, đồ thị web-BerkStan cho thấy tính nhạy cảm cao với omega, với thời gian thực thi tăng mạnh (303.993s) khi omega=1.070. Dynamic omega thường cho kết quả tốt nhưng không nhất quán, đôi khi tốt hơn omega cố định (như trong trường hợp 15,000 nút) nhưng đôi khi kém hơn (như trong trường hợp web-BerkStan).
+Một phát hiện quan trọng là omega=1.0 (không có over-relaxation) thường cho kết quả ổn định và đáng tin cậy với đồ thị lớn. Cụ thể:
+- Với web-NotreDame (325,729 nút): omega=1.000 cho 57.659s vs omega=1.075 cho 52.436s (chênh lệch 9.1%)
+- Với web-BerkStan (685,230 nút): omega=1.000 cho 91.971s vs omega=1.020 cho 91.334s (chênh lệch 0.7%)
+- Với web-Google (875,713 nút): omega=1.000 cho 118.008s vs omega=1.050 cho 108.600s (chênh lệch 7.9%)
 
-Về hiệu suất và khả năng mở rộng, thời gian thực thi tăng gần như tuyến tính với kích thước đồ thị, từ 0.609s (7,500 nút) đến 303.993s (685,230 nút). Số lần lặp thay đổi không đáng kể giữa các đồ thị, thường nằm trong khoảng 40-70 lần. Tốc độ hội tụ rất cao, đặc biệt với đồ thị web-Google (98.8M lần) và web-BerkStan (16.8M lần).
+Đặc điểm đồ thị có ảnh hưởng quan trọng đến hiệu suất của omega:
+- Đồ thị thưa (mật độ 0.000007-0.000016) cho kết quả ổn định hơn với omega, với chênh lệch thời gian thực thi không quá 10% giữa các giá trị omega.
+- Đồ thị dày hơn (mật độ 0.000516-0.000969) cho thấy sự nhạy cảm cao hơn với omega, với chênh lệch thời gian thực thi có thể lên đến 150% (như trong trường hợp omega=1.275 với đồ thị 7,500 nút).
+- Số lượng dangling nodes lớn (187,788 trong web-NotreDame) không ảnh hưởng đáng kể đến hiệu suất của omega.
+- Cấu trúc đồ thị (số lượng cạnh) có ảnh hưởng lớn đến thời gian thực thi, nhưng không ảnh hưởng đến số lần lặp.
 
-Đặc điểm đồ thị có ảnh hưởng quan trọng đến hiệu suất của omega. Mật độ đồ thị ảnh hưởng đến hiệu suất của omega, với đồ thị thưa (0.000007-0.000016) thường cho kết quả ổn định hơn. Số lượng dangling nodes lớn (187,788 trong web-NotreDame) không ảnh hưởng đáng kể đến hiệu suất. Cấu trúc đồ thị (số lượng cạnh) có ảnh hưởng lớn đến thời gian thực thi, nhưng không ảnh hưởng đến số lần lặp.
-
-Kết quả này cho thấy việc lựa chọn omega tối ưu phụ thuộc nhiều vào đặc điểm của đồ thị, và dynamic omega có thể là lựa chọn an toàn khi không biết trước omega tối ưu. Tuy nhiên, với đồ thị lớn, omega=1.0 (không có over-relaxation) thường cho kết quả ổn định và đáng tin cậy.
+Dynamic omega thường cho kết quả tốt nhưng không nhất quán:
+- Với đồ thị nhỏ (7,500 nút): dynamic omega cho kết quả gần với omega tối ưu (0.578s vs 0.510s)
+- Với đồ thị trung bình (15,000 nút): dynamic omega cho kết quả kém hơn (2.645s vs 1.815s)
+- Với đồ thị lớn: dynamic omega thường cho kết quả tương đương hoặc kém hơn omega cố định tốt nhất
 
 ## Kết luận
 
 Kết quả thực nghiệm cho thấy Power Iteration và Gauss-Seidel là hai lựa chọn thực tế nhất để tính toán PageRank trên đồ thị lớn. Power Iteration nổi bật với hiệu suất ổn định và khả năng mở rộng tuyệt vời, có thể xử lý hiệu quả đồ thị từ 64,000 đến 4.8 triệu nút với thời gian thực thi tăng gần như tuyến tính. Đặc biệt, với đồ thị cực lớn như soc-LiveJournal1 (4.8 triệu nút, 69 triệu cạnh), Power Iteration vẫn duy trì được hiệu suất ổn định với thời gian thực thi 221.288s và tốc độ hội tụ 744,712.15x.
 
-Gauss-Seidel cho thấy hiệu suất đa dạng và phức tạp hơn, phụ thuộc nhiều vào việc lựa chọn tham số omega. Với đồ thị nhỏ, omega tối ưu thường nằm trong khoảng 1.0-1.2, giúp giảm số lần lặp xuống 30-40%. Tuy nhiên, khi kích thước đồ thị tăng, việc lựa chọn omega tối ưu trở nên phức tạp hơn. Đồ thị web-NotreDame (325,729 nút) cho thấy omega=1.075 là tối ưu, trong khi web-BerkStan (685,230 nút) lại cho kết quả tốt nhất với omega=1.020. Đặc biệt, với đồ thị web-Google (875,713 nút), omega=1.0 (không có over-relaxation) lại cho kết quả ổn định và đáng tin cậy nhất.
+Gauss-Seidel cho thấy hiệu suất đa dạng và phức tạp hơn, phụ thuộc nhiều vào việc lựa chọn tham số omega. Với đồ thị nhỏ, omega tối ưu thường nằm trong khoảng 1.0-1.2, giúp giảm số lần lặp xuống 30-40%. Tuy nhiên, với đồ thị lớn, omega=1.0 (không có over-relaxation) thường cho kết quả ổn định và đáng tin cậy, với chênh lệch hiệu suất không quá 10% so với omega tối ưu. Đặc biệt, với đồ thị thưa (mật độ 0.000007-0.000016), việc lựa chọn omega ít ảnh hưởng đến hiệu suất tổng thể.
 
-Việc lựa chọn thuật toán nên dựa trên bốn yếu tố chính: kích thước đồ thị, bộ nhớ có sẵn, độ chính xác yêu cầu và ràng buộc thời gian. Power Iteration là lựa chọn tốt nhất cho các ứng dụng cần xử lý đồ thị rất lớn, với yêu cầu bộ nhớ thấp và hiệu suất ổn định. Gauss-Seidel có thể cho kết quả tốt hơn trên đồ thị vừa và nhỏ, đặc biệt khi có thể tìm được omega tối ưu. Dynamic omega có thể là lựa chọn an toàn khi không biết trước omega tối ưu, nhưng chi phí tính toán cho việc điều chỉnh omega có thể làm giảm hiệu suất tổng thể.
+Việc lựa chọn thuật toán nên dựa trên bốn yếu tố chính: kích thước đồ thị, bộ nhớ có sẵn, độ chính xác yêu cầu và ràng buộc thời gian. Power Iteration là lựa chọn tốt nhất cho các ứng dụng cần xử lý đồ thị rất lớn, với yêu cầu bộ nhớ thấp và hiệu suất ổn định. Gauss-Seidel có thể cho kết quả tốt hơn trên đồ thị vừa và nhỏ, đặc biệt khi có thể tìm được omega tối ưu. Với đồ thị lớn, việc sử dụng omega=1.0 trong Gauss-Seidel là lựa chọn an toàn và ổn định.
 
 Các phương pháp khác như GMRES và Direct LU cho thấy những hạn chế rõ ràng về khả năng mở rộng. GMRES, mặc dù có tốc độ hội tụ nhanh nhất (chỉ cần 10 lần lặp), nhưng thời gian thực thi tăng nhanh và yêu cầu bộ nhớ cao. Direct LU cho độ chính xác tuyệt vời nhưng chỉ phù hợp cho đồ thị nhỏ dưới 150,000 nút do độ phức tạp O(n³) và yêu cầu bộ nhớ O(n²).
 
-Kết quả này khẳng định rằng Power Iteration và Gauss-Seidel (với omega tối ưu) là hai lựa chọn thực tế nhất để tính toán PageRank trên đồ thị lớn. Cả hai phương pháp đều kết hợp tính chất hội tụ tốt với khả năng mở rộng và hiệu quả bộ nhớ tuyệt vời. Đặc biệt, thời gian thực thi tăng dưới tuyến tính của cả hai phương pháp làm cho chúng trở thành lựa chọn ưu tiên cho các ứng dụng thực tế cần xử lý đồ thị lớn. 
+Kết quả này khẳng định rằng Power Iteration và Gauss-Seidel (với omega=1.0 cho đồ thị lớn) là hai lựa chọn thực tế nhất để tính toán PageRank trên đồ thị lớn. Cả hai phương pháp đều kết hợp tính chất hội tụ tốt với khả năng mở rộng và hiệu quả bộ nhớ tuyệt vời. Đặc biệt, thời gian thực thi tăng dưới tuyến tính của cả hai phương pháp làm cho chúng trở thành lựa chọn ưu tiên cho các ứng dụng thực tế cần xử lý đồ thị lớn. 
