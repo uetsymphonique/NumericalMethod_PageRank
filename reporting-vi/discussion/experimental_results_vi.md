@@ -71,20 +71,20 @@ Các thực nghiệm được thực hiện sẽ đánh giá hiệu suất thôn
 
 | Algorithm | Time (s) | Iterations | Convergence Rate | Omega |
 |-----------|----------|------------|------------------|-------|
-| power | 0.346 | 54 | 910558.18x | N/A |
-| gauss_seidel (fixed ω=1.100) | 5.070 | 27 | 909898.00x | 1.100 |
-| gmres_solver | 97.345 | 10 | 3098020.19x | N/A |
-| direct_lu | 7.124 | 0 | N/A | N/A |
+| power | 0.347 | 54 | 910558.18x | N/A |
+| gauss_seidel (fixed ω=1.100) | 5.560 | 27 | 909898.00x | 1.100 |
+| gmres_solver | 105.604 | 10 | 3098020.19x | N/A |
+| direct_lu | 7.240 | 0 | N/A | N/A |
 
 #### Convergence Curve
-![Convergence Curve](../data-results/64000_nodes_plots_20250527_000118/convergence.png)
+![Convergence Curve](../data-results/EC1_64000_nodes_plots_20250527_000118/convergence.png)
 
 #### Results
 Với đồ thị cỡ trung bình này, chúng ta có thể thấy rõ sự khác biệt trong hiệu suất của các thuật toán:
-+ Power Iteration cho thấy hiệu suất ổn định với thời gian thực thi 0.346s và số lần lặp 54 lần, chứng tỏ khả năng mở rộng tốt.
-+ Gauss-Seidel với omega=1.1 cho thấy cải thiện đáng kể so với trường hợp omega=1.0, hội tụ trong 27 lần lặp với thời gian 5.070s.
-+ GMRES duy trì tốc độ hội tụ nhanh nhất (10 lần lặp) nhưng thời gian thực thi cao (97.345s), cho thấy nhược điểm về khả năng mở rộng.
-+ Direct LU cho kết quả chính xác với thời gian 7.124s, phù hợp cho đồ thị cỡ này.
++ Power Iteration cho thấy hiệu suất ổn định với thời gian thực thi 0.347s và số lần lặp 54 lần, chứng tỏ khả năng mở rộng tốt.
++ Gauss-Seidel với omega=1.1 cho thấy cải thiện đáng kể so với trường hợp omega=1.0, hội tụ trong 27 lần lặp với thời gian 5.560s.
++ GMRES duy trì tốc độ hội tụ nhanh nhất (10 lần lặp) nhưng thời gian thực thi cao (105.604s), cho thấy nhược điểm về khả năng mở rộng.
++ Direct LU cho kết quả chính xác với thời gian 7.240s, phù hợp cho đồ thị cỡ này.
 + Tất cả các thuật toán đều cho kết quả PageRank rất gần với baseline, chứng tỏ độ tin cậy cao.
 
 ### Thử nghiệm 2 (150,000 nút)
@@ -93,18 +93,18 @@ Với đồ thị cỡ trung bình này, chúng ta có thể thấy rõ sự kh�
 
 | Algorithm | Time (s) | Iterations | Convergence Rate | Omega |
 |-----------|----------|------------|------------------|-------|
-| power | 1.234 | 80 | 910558.18x | N/A |
-| gauss_seidel (fixed ω=1.100) | 1.510 | 70 | 909898.00x | 1.100 |
-| direct_lu | 175.727 | 0 | N/A | N/A |
+| power | 1.174 | 80 | 88615917.85x | N/A |
+| gauss_seidel (fixed ω=1.100) | 27.562 | 62 | 98639253.71x | 1.100 |
+| direct_lu | 183.847 | 0 | N/A | N/A |
 
 #### Top 10 Nodes
-![Top 10](../data-results/150000_nodes_plots_20250527_000651/top10_comparison.png)
+![Top 10](../data-results/EC2_150000_nodes_plots_20250527_000651/top10_comparison.png)
 
 #### Results
 Ở kích thước đồ thị lớn này, chúng ta chỉ còn có thể so sánh Power Iteration, Gauss-Seidel và Direct LU:
-+ Power Iteration tiếp tục thể hiện hiệu suất ổn định với thời gian thực thi 1.234s, số lần lặp tăng lên 80 lần do yêu cầu độ chính xác cao hơn (1e-8).
-+ Gauss-Seidel với omega=1.1 vẫn duy trì được hiệu suất tốt, hội tụ trong 70 lần lặp với thời gian 1.510s.
-+ Direct LU đã đến giới hạn thực tế với thời gian thực thi 175.727s, cho thấy rõ nhược điểm về khả năng mở rộng.
++ Power Iteration tiếp tục thể hiện hiệu suất ổn định với thời gian thực thi 1.174s, số lần lặp tăng lên 80 lần do yêu cầu độ chính xác cao hơn (1e-8).
++ Gauss-Seidel với omega=1.1 vẫn duy trì được hiệu suất tốt, hội tụ trong 62 lần lặp với thời gian 27.562s.
++ Direct LU đã đến giới hạn thực tế với thời gian thực thi 183.847s, cho thấy rõ nhược điểm về khả năng mở rộng.
 + Kết quả PageRank vẫn duy trì độ chính xác cao, với sai số rất nhỏ so với baseline.
 + Phân bố điểm số PageRank trở nên đồng đều hơn, phản ánh cấu trúc phức tạp của đồ thị lớn.
 
@@ -114,13 +114,13 @@ Với đồ thị cỡ trung bình này, chúng ta có thể thấy rõ sự kh�
 
 | Algorithm | Time (s) | Iterations | Convergence Rate |
 |-----------|----------|------------|------------------|
-| power | 5.536 | 90 | 98843889.50x |
-| gauss_seidel (fixed ω=1.000) | 1.049 | 70 | 98843889.50x |
+| power | 5.095 | 90 | 98843889.50x |
+| gauss_seidel (fixed ω=1.000) | 131.671 | 53 | 125931295.95x |
 
 #### Results
 Với đồ thị lớn này, chúng ta chỉ có thể so sánh Power Iteration và Gauss-Seidel:
-+ Power Iteration tiếp tục thể hiện hiệu suất ổn định với thời gian thực thi 5.536s, số lần lặp tăng lên 90 lần do yêu cầu độ chính xác cao (1e-8).
-+ Gauss-Seidel với omega=1.0 cho kết quả tốt với thời gian thực thi 1.049s và số lần lặp 70 lần.
++ Power Iteration tiếp tục thể hiện hiệu suất ổn định với thời gian thực thi 5.095s, số lần lặp tăng lên 90 lần do yêu cầu độ chính xác cao (1e-8).
++ Gauss-Seidel với omega=1.0 cho kết quả tốt với thời gian thực thi 131.671s và số lần lặp 53 lần.
 + Kết quả PageRank vẫn duy trì độ chính xác cao, với sai số rất nhỏ so với baseline.
 
 ### Thử nghiệm 4 (3,774,768 nút - cit-Patents)
@@ -159,11 +159,13 @@ Với đồ thị lớn nhất từ bộ dữ liệu soc-LiveJournal1, Power Ite
 
 | Algorithm | Time (s) | Iterations | Convergence Rate | Omega |
 |-----------|----------|------------|------------------|-------|
-| gauss_seidel (fixed ω=1.000) | 0.156 | 45 | 909898.00x | 1.000 |
-| gauss_seidel (fixed ω=1.100) | 0.142 | 38 | 909898.00x | 1.100 |
-| gauss_seidel (fixed ω=1.200) | 0.135 | 32 | 909898.00x | 1.200 |
-| gauss_seidel (fixed ω=1.300) | 0.148 | 36 | 909898.00x | 1.300 |
-| gauss_seidel (dynamic ω) | 0.152 | 37 | 909898.00x | dynamic |
+| gauss_seidel (ω=1.000) | 0.609 | 27 | 105404.50x | 1.000 |
+| gauss_seidel (ω=1.100) | 0.510 | 23 | 129320.61x | 1.100 |
+| gauss_seidel (ω=1.200) | 0.714 | 32 | 117213.73x | 1.200 |
+| gauss_seidel (ω=1.225) | 1.068 | 48 | 108823.04x | 1.225 |
+| gauss_seidel (ω=1.250) | 1.510 | 70 | 23177.73x | 1.250 |
+| gauss_seidel (ω=1.275) | 1.532 | 70 | 537.82x | 1.275 |
+| gauss_seidel (dynamic ω) | 0.578 | 24 | 110046.02x | dynamic |
 
 #### Results
 Với đồ thị cỡ nhỏ này, chúng ta có thể thấy rõ ảnh hưởng của việc điều chỉnh omega trong thuật toán Gauss-Seidel:
@@ -234,11 +236,11 @@ Với đồ thị web-BerkStan, chúng ta thấy sự thay đổi rõ rệt tron
 
 | Algorithm | Time (s) | Iterations | Convergence Rate | Omega |
 |-----------|----------|------------|------------------|-------|
-| gauss_seidel (fixed ω=1.000) | 1.049 | 70 | 98843889.50x | 1.000 |
-| gauss_seidel (fixed ω=1.025) | 1.142 | 68 | 98843889.50x | 1.025 |
-| gauss_seidel (fixed ω=1.050) | 1.248 | 66 | 98843889.50x | 1.050 |
-| gauss_seidel (fixed ω=1.070) | 1.356 | 64 | 98843889.50x | 1.070 |
-| gauss_seidel (dynamic ω) | 1.289 | 65 | 98843889.50x | dynamic |
+| gauss_seidel (fixed ω=1.000) | 118.008 | 46 | 13147591.81x | 1.000 |
+| gauss_seidel (fixed ω=1.030) | 109.435 | 43 | 11765077.51x | 1.030 |
+| gauss_seidel (fixed ω=1.050) | 108.600 | 42 | 13103845.84x | 1.050 |
+| gauss_seidel (fixed ω=1.080) | 146.080 | 58 | 12025307.57x | 1.080 |
+| gauss_seidel (dynamic ω) | 111.228 | 43 | 12981485.01x | dynamic |
 
 #### Results
 Với đồ thị web-Google, Gauss-Seidel cho thấy hiệu suất ổn định và nhất quán:
@@ -250,15 +252,15 @@ Với đồ thị web-Google, Gauss-Seidel cho thấy hiệu suất ổn định
 ## Phân tích đặc điểm, hiệu suất và giới hạn cài đặt của các thuật toán
 
 ### Power Iteration
-Power Iteration thể hiện hiệu suất ổn định và khả năng mở rộng tốt nhất trong tất cả các thử nghiệm. Thuật toán này có thể xử lý hiệu quả đồ thị rất lớn (từ 64,000 đến 4.8 triệu nút) với thời gian thực thi tăng gần như tuyến tính, từ 0.346s đến 221.288s khi kích thước đồ thị tăng. Số lần lặp tăng chậm từ 54 đến 50 lần khi kích thước đồ thị tăng và yêu cầu sai số nhỏ hơn (1e-8). Đặc biệt, Power Iteration sử dụng bộ nhớ rất hiệu quả, chỉ cần lưu trữ vector hiện tại và trước đó (O(n)), làm cho nó trở thành lựa chọn lý tưởng cho các ứng dụng quy mô lớn.
+Power Iteration thể hiện hiệu suất ổn định và khả năng mở rộng tốt nhất trong tất cả các thử nghiệm. Thuật toán này có thể xử lý hiệu quả đồ thị rất lớn (từ 64,000 đến 4.8 triệu nút) với thời gian thực thi tăng gần như tuyến tính, từ 0.347s đến 221.288s khi kích thước đồ thị tăng. Số lần lặp tăng chậm từ 54 đến 50 lần khi kích thước đồ thị tăng và yêu cầu sai số nhỏ hơn (1e-8). Đặc biệt, Power Iteration sử dụng bộ nhớ rất hiệu quả, chỉ cần lưu trữ vector hiện tại và trước đó (O(n)), làm cho nó trở thành lựa chọn lý tưởng cho các ứng dụng quy mô lớn.
 
 Các thử nghiệm với đồ thị cực lớn (3.8M và 4.8M nút) cho thấy thuật toán vẫn duy trì được hiệu suất ổn định ngay cả khi xử lý đồ thị có số lượng cạnh lớn (16.5M và 69M cạnh) và nhiều dangling nodes (1.7M và 539K). Tốc độ hội tụ vẫn ở mức cao (73123803.50x và 744712.15x) cho thấy khả năng thích ứng tốt với các loại đồ thị khác nhau, từ thưa đến dày đặc. Kết quả này khẳng định Power Iteration là lựa chọn tốt nhất cho các ứng dụng cần xử lý đồ thị quy mô lớn trong thực tế.
 
 ### Direct LU (Phân tích LU trực tiếp)
-Phân tích LU trực tiếp cho độ chính xác tuyệt vời nhưng khả năng mở rộng kém, chỉ phù hợp cho đồ thị nhỏ cần độ chính xác cao. Thời gian thực thi tăng nhanh từ 7.124s đến 175.727s do độ phức tạp O(n³), và việc sử dụng bộ nhớ tăng bậc hai với kích thước đồ thị (O(n²)) đặt ra giới hạn thực tế ở đồ thị dưới 150,000 nút. Mặc dù không cần lặp, chi phí tính toán cao làm cho phương pháp này không phù hợp cho các ứng dụng quy mô lớn.
+Phân tích LU trực tiếp cho độ chính xác tuyệt vời nhưng khả năng mở rộng kém, chỉ phù hợp cho đồ thị nhỏ cần độ chính xác cao. Thời gian thực thi tăng nhanh từ 7.240s đến 183.847s do độ phức tạp O(n³), và việc sử dụng bộ nhớ tăng bậc hai với kích thước đồ thị (O(n²)) đặt ra giới hạn thực tế ở đồ thị dưới 150,000 nút. Mặc dù không cần lặp, chi phí tính toán cao làm cho phương pháp này không phù hợp cho các ứng dụng quy mô lớn.
 
 ### GMRES
-GMRES nổi bật với tốc độ hội tụ nhanh nhất, chỉ cần 10 lần lặp để đạt độ chính xác mong muốn. Tuy nhiên, thời gian thực thi tăng nhanh (97.345s cho đồ thị 64,000 nút) và việc sử dụng bộ nhớ tăng với số lần lặp và kích thước đồ thị đặt ra giới hạn thực tế ở đồ thị dưới 64,000 nút. Phương pháp này hiệu quả cho đồ thị trung bình cần hội tụ nhanh nhưng không phù hợp cho đồ thị rất lớn.
+GMRES nổi bật với tốc độ hội tụ nhanh nhất, chỉ cần 10 lần lặp để đạt độ chính xác mong muốn. Tuy nhiên, thời gian thực thi tăng nhanh (105.604s cho đồ thị 64,000 nút) và việc sử dụng bộ nhớ tăng với số lần lặp và kích thước đồ thị đặt ra giới hạn thực tế ở đồ thị dưới 64,000 nút. Phương pháp này hiệu quả cho đồ thị trung bình cần hội tụ nhanh nhưng không phù hợp cho đồ thị rất lớn.
 
 ### Gauss-Seidel
 
@@ -266,17 +268,17 @@ GMRES nổi bật với tốc độ hội tụ nhanh nhất, chỉ cần 10 lầ
 
 | Đồ thị | Kích thước | Mật độ | Omega=1.0 | Omega tốt nhất (thời gian) | Omega tốt nhất (lặp) | Dynamic Omega |
 |--------|------------|---------|------------|---------------------------|---------------------|---------------|
-| 7,500 nút<br>54,508 cạnh | Nhỏ | 0.000969 | 0.156s, 45 lần | 1.200, 0.135s, 32 lần | 1.200, 0.135s, 32 lần | 0.152s, 37 lần |
+| 7,500 nút<br>54,508 cạnh | Nhỏ | 0.000969 | 0.609s, 27 lần | 1.100, 0.510s, 23 lần | 1.100, 0.510s, 23 lần | 0.578s, 24 lần |
 | 15,000 nút<br>115,985 cạnh | Nhỏ | 0.000516 | 1.815s, 40 lần | 1.000, 1.815s, 40 lần | 1.000, 1.815s, 40 lần | 2.645s, 58 lần |
 | web-NotreDame<br>325,729 nút<br>1,497,134 cạnh | Trung bình | 0.000014 | 57.659s, 61 lần | 1.075, 52.436s, 57 lần | 1.075, 52.436s, 57 lần | 53.697s, 58 lần |
 | web-BerkStan<br>685,230 nút<br>7,600,595 cạnh | Lớn | 0.000016 | 91.971s, 44 lần | 1.020, 91.334s, 43 lần | 1.020, 91.334s, 43 lần | 120.813s, 58 lần |
-| web-Google<br>875,713 nút<br>5,105,039 cạnh | Rất lớn | 0.000007 | 1.049s, 70 lần | 1.000, 1.049s, 70 lần | 1.070, 1.356s, 64 lần | 1.289s, 65 lần |
+| web-Google<br>875,713 nút<br>5,105,039 cạnh | Rất lớn | 0.000007 | 118.008s, 46 lần | 1.050, 108.600s, 42 lần | 1.050, 108.600s, 42 lần | 111.228s, 43 lần |
 
 Gauss-Seidel cho thấy hiệu suất đa dạng và phức tạp khi thử nghiệm trên nhiều loại đồ thị khác nhau. Với đồ thị nhỏ (7,500-15,000 nút), omega tối ưu nằm trong khoảng 1.0-1.2, giúp giảm số lần lặp xuống 30-40% so với omega=1.0. Tuy nhiên, khi chuyển sang đồ thị trung bình (325,729 nút - web-NotreDame), omega tối ưu tăng lên 1.075, giúp giảm số lần lặp từ 61 xuống 57 lần. Điều thú vị là với đồ thị lớn (685,230 nút - web-BerkStan), omega tối ưu lại giảm xuống 1.020, cho thời gian thực thi tốt nhất (91.334s) và số lần lặp ít nhất (43 lần). Với đồ thị rất lớn (875,713 nút - web-Google), omega tối ưu nằm trong khoảng 1.0-1.070, với hiệu suất ổn định cho tất cả các giá trị.
 
 Tính ổn định của thuật toán cũng thay đổi đáng kể giữa các đồ thị. Đồ thị web-NotreDame và web-Google cho thấy tính ổn định cao với omega, với thời gian thực thi thay đổi không đáng kể (52-57s và 1.0-1.3s). Ngược lại, đồ thị web-BerkStan cho thấy tính nhạy cảm cao với omega, với thời gian thực thi tăng mạnh (303.993s) khi omega=1.070. Dynamic omega thường cho kết quả tốt nhưng không nhất quán, đôi khi tốt hơn omega cố định (như trong trường hợp 15,000 nút) nhưng đôi khi kém hơn (như trong trường hợp web-BerkStan).
 
-Về hiệu suất và khả năng mở rộng, thời gian thực thi tăng gần như tuyến tính với kích thước đồ thị, từ 0.135s (7,500 nút) đến 303.993s (685,230 nút). Số lần lặp thay đổi không đáng kể giữa các đồ thị, thường nằm trong khoảng 40-70 lần. Tốc độ hội tụ rất cao, đặc biệt với đồ thị web-Google (98.8M lần) và web-BerkStan (16.8M lần).
+Về hiệu suất và khả năng mở rộng, thời gian thực thi tăng gần như tuyến tính với kích thước đồ thị, từ 0.609s (7,500 nút) đến 303.993s (685,230 nút). Số lần lặp thay đổi không đáng kể giữa các đồ thị, thường nằm trong khoảng 40-70 lần. Tốc độ hội tụ rất cao, đặc biệt với đồ thị web-Google (98.8M lần) và web-BerkStan (16.8M lần).
 
 Đặc điểm đồ thị có ảnh hưởng quan trọng đến hiệu suất của omega. Mật độ đồ thị ảnh hưởng đến hiệu suất của omega, với đồ thị thưa (0.000007-0.000016) thường cho kết quả ổn định hơn. Số lượng dangling nodes lớn (187,788 trong web-NotreDame) không ảnh hưởng đáng kể đến hiệu suất. Cấu trúc đồ thị (số lượng cạnh) có ảnh hưởng lớn đến thời gian thực thi, nhưng không ảnh hưởng đến số lần lặp.
 
