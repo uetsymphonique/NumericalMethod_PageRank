@@ -214,3 +214,4 @@ def pagerank(G, alpha=0.85, tol=1e-6, max_iter=100, omega_strategy="fixed", omeg
 
 1. [A Study on Comparison of Jacobi, GaussSeidel and Sor Methods for the Solution in System of Linear Equations](https://ijmttjournal.org/public/assets/volume-56/number-4/IJMTT-V56P531.pdf)
 2. [Iterative Methods: SOR Method](https://engcourses-uofa.ca/books/numericalanalysis/linear-systems-of-equations/iterative-methods/sor-method/)
+ 

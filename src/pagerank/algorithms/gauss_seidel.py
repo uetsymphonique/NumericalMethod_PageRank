@@ -13,9 +13,9 @@ import networkx as nx
 import numpy as np, time
 from scipy.sparse import csr_matrix
 from typing import Union, Callable, List, Dict, Tuple
-import logging
+from ..logging_utils import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 def find_optimal_omega(G: nx.DiGraph, alpha: float = 0.85, test_range: tuple = (1.0, 1.9), steps: int = 10) -> float:
     """
@@ -44,7 +44,7 @@ def find_optimal_omega(G: nx.DiGraph, alpha: float = 0.85, test_range: tuple = (
     test_tol = 1e-6      # Use same tolerance as main problem
     
     for omega in omega_values:
-        logger.info(f"Testing omega = {omega:.3f}")
+        logger.debug(f"Testing omega = {omega:.3f}")
         
         # Run Gauss-Seidel with current omega
         scores, residuals, _ = pagerank(G, alpha=alpha, tol=test_tol, max_iter=test_iterations, omega=omega)
@@ -100,7 +100,7 @@ def create_dynamic_omega() -> Callable[[int, List[float]], float]:
     def dynamic_omega(iteration: int, residuals: List[float]) -> float:
         if iteration < 2:
             if iteration == 1:  # Log only once at start
-                logger.info(f"Starting with omega = {current_omega[0]:.3f}")
+                logger.debug(f"Starting with omega = {current_omega[0]:.3f}")
             return current_omega[0]  # Start with standard Gauss-Seidel
         
         # Calculate convergence rate
@@ -132,17 +132,17 @@ def create_dynamic_omega() -> Callable[[int, List[float]], float]:
             if rate < 1.2:  # Very slow convergence
                 current_omega[0] = min(1.3, current_omega[0] + 0.01)  # Very small increase
                 if current_omega[0] != old_omega:
-                    logger.info(f"Iteration {iteration}: Very slow convergence (rate = {rate:.3f}), "
+                    logger.debug(f"Iteration {iteration}: Very slow convergence (rate = {rate:.3f}), "
                               f"increasing omega from {old_omega:.3f} to {current_omega[0]:.3f}")
             elif rate > 1.8:  # Fast convergence
                 current_omega[0] = max(1.0, current_omega[0] - 0.02)  # Small decrease
                 if current_omega[0] != old_omega:
-                    logger.info(f"Iteration {iteration}: Fast convergence (rate = {rate:.3f}), "
+                    logger.debug(f"Iteration {iteration}: Fast convergence (rate = {rate:.3f}), "
                               f"decreasing omega from {old_omega:.3f} to {current_omega[0]:.3f}")
             elif rate < last_rate[0]:  # Convergence is slowing down
                 current_omega[0] = min(1.3, current_omega[0] + 0.005)  # Tiny increase
                 if current_omega[0] != old_omega:
-                    logger.info(f"Iteration {iteration}: Convergence slowing (rate = {rate:.3f} < {last_rate[0]:.3f}), "
+                    logger.debug(f"Iteration {iteration}: Convergence slowing (rate = {rate:.3f} < {last_rate[0]:.3f}), "
                               f"increasing omega from {old_omega:.3f} to {current_omega[0]:.3f}")
         
         last_rate[0] = rate  # Update last rate
@@ -150,7 +150,7 @@ def create_dynamic_omega() -> Callable[[int, List[float]], float]:
         
         # Log progress every 10 iterations
         if iteration - last_logged_iteration[0] >= 10:
-            logger.info(f"Iteration {iteration}: Current omega = {current_omega[0]:.3f}, "
+            logger.debug(f"Iteration {iteration}: Current omega = {current_omega[0]:.3f}, "
                       f"convergence rate = {rate:.3f}, residual = {residuals[-1]:.2e}")
             last_logged_iteration[0] = iteration
         

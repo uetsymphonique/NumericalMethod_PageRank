@@ -15,7 +15,7 @@ from scipy.sparse.linalg import splu
 from ..logging_utils import get_logger
 from typing import Dict, List, Tuple
 
-log = get_logger(__name__)
+logger = get_logger(__name__)
 
 
 def build_matrix(G, alpha: float = 0.85) -> csr_matrix:
@@ -53,16 +53,20 @@ def pagerank(
     if G.number_of_nodes() == 0:
         return {}, [], 0.0
 
+    logger.info(f"Starting Direct LU solver with {permc_spec} pivot strategy")
+    logger.debug(f"Parameters: alpha={alpha}, drop_tol={drop_tol}")
+
     # 1. Build A (CSR) and vector b
     A = build_matrix(G, alpha)
     b = np.ones(G.number_of_nodes()) * (1 - alpha) / G.number_of_nodes()
     
     # 2. LU decomposition
-    log.info("Factorising sparse LU ...")
+    logger.info("Factorising sparse LU...")
     lu = splu(A.tocsc(), permc_spec=permc_spec,
               options={"ILU_MILU": "SMILU_2"})  # full pivoting
     
     # 3. Solve
+    logger.debug("Solving system...")
     x = lu.solve(b)
     
     # 4. Normalize & statistics
@@ -70,5 +74,5 @@ def pagerank(
     x /= x.sum()
     
     elapsed = time.perf_counter() - t0
-    log.info("LU: total time %.2fs", elapsed)
+    logger.info(f"Direct LU completed in {elapsed:.2f}s")
     return dict(zip(G.nodes(), x)), [], elapsed 

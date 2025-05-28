@@ -6,7 +6,7 @@ import networkx as nx, numpy as np, time
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import LinearOperator, gmres, spilu
 from ..logging_utils import get_logger
-log = get_logger(__name__)
+logger = get_logger(__name__)
 
 def _build_linear_operator(G, alpha: float):
     """Returns (LinearOperator A, vector b, danglings_mask)"""
@@ -35,6 +35,7 @@ def _make_preconditioner(A_csr: csr_matrix, kind:str):
         diag = 1.0 / A_csr.diagonal()
         return LinearOperator(A_csr.shape, matvec=lambda x: diag * x)
     if kind == "ilu":
+        logger.debug("Building ILU preconditioner...")
         ilu = spilu(A_csr.tocsc(), drop_tol=1e-4, fill_factor=10)
         return LinearOperator(A_csr.shape, matvec=ilu.solve)
     raise ValueError(f"Unknown preconditioner {kind}")
@@ -70,6 +71,9 @@ def pagerank(
     if G.number_of_nodes() == 0:
         return {}, [], 0.0
 
+    logger.info(f"Starting GMRES solver with {preconditioner} preconditioner")
+    logger.debug(f"Parameters: alpha={alpha}, tol={tol}, max_iter={max_iter}, restart={restart}")
+
     # Build LinearOperator
     A_op, b, dangling_mask, nodes, P = _build_linear_operator(G, alpha)
 
@@ -94,10 +98,13 @@ def pagerank(
                     maxiter=max_iter, M=M, callback=callback,
                     callback_type='pr_norm')
     if info != 0:
-        log.warning("GMRES did not converge (info=%s)", info)
+        logger.warning("GMRES did not converge (info=%s)", info)
+    else:
+        logger.info("GMRES converged successfully")
 
     x = np.maximum(x, 0)
     x /= x.sum()
     
     elapsed = time.perf_counter() - t0
+    logger.info(f"GMRES completed in {elapsed:.2f}s with {len(res_history)} iterations")
     return dict(zip(nodes, x)), res_history, elapsed 
